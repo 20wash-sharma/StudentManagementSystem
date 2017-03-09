@@ -32,7 +32,7 @@
                     <div class="form-group">
                         <label for="example-text-input" class="col-2 col-form-label">Students</label>
                         <div class="col-10">
-                            <select class="form-control" name="student" ng-required="true" ng-model="ssstudent.student">
+                            <select class="form-control" name="student" ng-required="true" ng-model="ssstudent.student" ng-change="onStudentDropDownChange(ssstudent.student)">
                                 <option 
                                     ng-repeat="studentv in students"
                                     value="{{studentv.student_id}}">
@@ -48,9 +48,9 @@
                     <div class="form-group">
                         <label for="example-text-input" class="col-2 col-form-label">Subject</label>
                         <div class="col-10">
-                            <select class="form-control" name="subject" ng-required="true" ng-model="ssstudent.subject" placeholder="Subjects">
+                            <select class="form-control" name="subject" ng-required="true" ng-model="ssstudent.subject" placeholder="Subjects" >
                                 <option 
-                                    ng-repeat="subject in subjects"
+                                    ng-repeat="subject in filteredsubjects"
                                     value="{{subject.subject_id}}">
                                     {{subject.subject_name}}
                                 </option>

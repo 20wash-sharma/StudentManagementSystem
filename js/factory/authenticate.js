@@ -241,6 +241,28 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
 
 
             }
+            
+               ,'filterSubjectDropDown': function (student_id) {
+
+                var qOjbect = $q.defer();
+                var userdata = { task: 'getFilteredSubject' , student_id:student_id};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    //console.log(success.data[0].Sender);
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            }
             ,'getSubject': function () {
 
                 var qOjbect = $q.defer();

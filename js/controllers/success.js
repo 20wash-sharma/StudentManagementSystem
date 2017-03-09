@@ -29,6 +29,22 @@ myApp.controller('SuccessController',
 
 
         };
+        
+        $scope.onStudentDropDownChange = function (studentid) {
+            
+            Data.filterSubjectDropDown(studentid).then(function (results) {
+                 
+                 console.log(results);
+               $rootScope.filteredsubjects=results;
+
+
+            }, function (err) {
+                //document.write(err);
+                $scope.invalidmessage = err;
+            });
+
+
+        };
          $scope.addStudent = function () {
             
             Data.addStudentInfo($scope.sstudent).then(function (status) {
