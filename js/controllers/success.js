@@ -143,9 +143,14 @@ myApp.controller('SuccessController',
 
         };
      $scope.addMarks = function () {
-       
+       console.log($scope.ssstudent);
+       console.log($rootScope.filteredsubjects);
+       for(sub in  $rootScope.filteredsubjects)
+       {
+         console.log($rootScope.filteredsubjects[sub].subject_name);
+       }
             
-            Data.addMarks($scope.ssstudent).then(function (status) {
+            /*Data.addMarks($scope.ssstudent).then(function (status) {
                  toaster.clear();
                  console.log(status);
                 if (status == 'success')
@@ -171,7 +176,7 @@ myApp.controller('SuccessController',
             }, function (err) {
                 //document.write(err);
                 $scope.invalidmessage = err;
-            });
+            });*/
 
 
         };
