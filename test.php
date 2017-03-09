@@ -150,6 +150,27 @@ else if ($data->task == 'updateuser') {
   }
 
 }//if get session data is requested
+else if ($data->task == 'getStudentMarksInfo') {
+    $myArray = array();
+    if (isset($_SESSION["currentuser"])) {
+        $query1 = "select smi.*,st.student_name, c.class_level,su.subject_name from studentmarksinfo smi join subjects su on su.subject_id= smi.subject_id join student st on st.student_id= smi.student_id join class c on c.class_id = st.class_id order by st.student_name asc
+";
+        $result = $mysqli->query($query1);
+        $row_cnt = $result->num_rows;
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $myArray[] = $row;
+            }
+            
+        }
+        echo json_encode($myArray);
+    }//if the session is set
+  else 
+  {
+      echo 'nosession';
+  }
+
+}//if get session data is requested
 else if ($data->task == 'getClass') {
     $myArray = array();
     if (isset($_SESSION["currentuser"])) {
@@ -193,7 +214,7 @@ else if ($data->task == 'getSubject') {
 else if ($data->task == 'getStudent') {
     $myArray = array();
     if (isset($_SESSION["currentuser"])) {
-        $query1 = "select * from student";
+        $query1 = "select st.*,c.class_level from student st join class c on st.class_id= c.class_id";
         $result = $mysqli->query($query1);
         $row_cnt = $result->num_rows;
         if ($row_cnt > 0) {

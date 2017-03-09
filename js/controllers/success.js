@@ -36,7 +36,7 @@ myApp.controller('SuccessController',
                  console.log(status);
                 if (status == 'success')
                 {
-                    //$location.path('/profile');
+                    $scope.sstudent={};
                     Data.getStudent().then(function (results) {
                          $rootScope.students=results;
                          
@@ -68,6 +68,7 @@ myApp.controller('SuccessController',
                  console.log(status);
                 if (status == 'success')
                 {
+                     $scope.sclass={};
                     Data.getClass().then(function (results) {
                          $rootScope.classes=results;
                          
@@ -99,10 +100,12 @@ myApp.controller('SuccessController',
                  console.log(status);
                 if (status == 'success')
                 {
+                    $scope.ssubject={};
                      Data.getSubject().then(function (results) {
                          $rootScope.subjects=results;
                          console.log(results);
-                         
+                          $rootScope.subjectslength= Object.keys($rootScope.subjects).length;
+                      
                           
                        
                         
@@ -131,7 +134,16 @@ myApp.controller('SuccessController',
                  console.log(status);
                 if (status == 'success')
                 {
-                    //$location.path('/profile');
+                     $scope.ssstudent={};
+                     Data.getStudentMarksInfo().then(function (results) {
+                         $rootScope.studentMarkInfo=results;
+                         console.log(results);
+                         
+                          
+                       
+                        
+                         
+                     });
                      toaster.pop('info', "", 'successfully added', 3000, 'trustedHtml');
                 } else
                 {

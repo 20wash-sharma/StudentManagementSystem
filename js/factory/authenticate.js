@@ -62,6 +62,26 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
 
 
             },
+            'getStudentMarksInfo': function () {
+             
+                var qOjbect = $q.defer();
+                var userdata = {task: 'getStudentMarksInfo'};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            },
              'addClass': function (classinfo) {
                 console.log(classinfo);
                 var qOjbect = $q.defer();

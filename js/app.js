@@ -62,6 +62,8 @@ myApp.config(['$routeProvider', function ($routeProvider) {
                      });
                      Data.getSubject().then(function (results) {
                          $rootScope.subjects=results;
+                         $rootScope.subjectslength= Object.keys($rootScope.subjects).length;
+                         
                          console.log(results);
                          
                           
@@ -69,6 +71,16 @@ myApp.config(['$routeProvider', function ($routeProvider) {
                         
                          
                      });
+                      Data.getStudentMarksInfo().then(function (results) {
+                         $rootScope.studentMarkInfo=results;
+                         console.log(results);
+                         
+                          
+                       
+                        
+                         
+                     });
+                      
                 }
             }//session exists
             else {
