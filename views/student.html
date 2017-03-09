@@ -1,0 +1,161 @@
+<div class="row">
+
+
+    <button  ng-click="updateStudentAndSubjectDropDown()" data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Marks</button>
+<button  ng-click="updateClassDropDown()" data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#classModal" data-whatever="@mdo">Add Class</button>
+<button  ng-click="updateSubjectDropDown()" data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#subjectModal" data-whatever="@mdo">Add Subject</button>
+
+    <div class="col-md-8 col-md-offset-2">
+
+
+        <form name="mystudentform" class="form-signin" ng-submit="addStudent()"
+              novalidate>
+            <h4 class="alert alert-info">Add Students</h4>
+
+            <p class="text-danger" ng-show="invalidmessage">{{invalidmessage}}</p>
+            <div class="form-group">
+                <label for="inputEmail" class="sr-only">Name</label>
+                <input class="form-control" type="text" name="name" placeholder="Name"
+                       ng-model="sstudent.name" ng-required="true">
+                <p class="text-danger"
+                   ng-show="mystudentform.name.$invalid && mystudentform.name.$touched">
+                    Name required</p>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="sr-only">Class</label>
+
+                <select class="form-control" ng-model="sstudent.class">
+                    <option 
+                        ng-repeat="class in classes"
+                        value="{{class.class_id}}">
+                        {{class.class_level}}
+                    </option>
+                </select>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit"  
+                    ng-disabled="mystudentform.$invalid">Add</button>
+
+
+        </form>
+
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Add Marks</h4>
+            </div>
+            <form name="mymarksform" novalidate method="post" >
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputPassword" class="sr-only">Students</label>
+
+                        <select class="form-control" ng-model="ssstudent.student">
+                            <option 
+                                ng-repeat="studentv in students"
+                                value="{{studentv.student_id}}">
+                                {{studentv.student_name}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPassword" class="sr-only">Subject</label>
+                        <select class="form-control" ng-model="ssstudent.subject" placeholder="Subjects">
+                            <option 
+                                ng-repeat="subject in subjects"
+                                value="{{subject.subject_id}}">
+                                {{subject.subject_name}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword" class="sr-only">Mark</label>
+                        <input class="form-control" type="text" name="name" placeholder="Mark"
+                               ng-model="ssstudent.mark" ng-required="true">
+                        <p class="text-danger"
+                           ng-show="mymarksform.mark.$invalid && mymarksform.mark.$touched">
+                            Mark required</p>
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" ng-click="addMarks()"  data-dismiss="modal" ng-disabled="mymarksform.$invalid"  class="btn btn-primary" >Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="subjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Add Subject</h4>
+            </div>
+            <form name="mysubjectform" novalidate method="post" >
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label for="inputPassword" class="sr-only">Subject Name</label>
+                        <input class="form-control" type="text" name="name" placeholder="subject name"
+                               ng-model="ssubject.subjectname" ng-required="true">
+                        <p class="text-danger"
+                           ng-show="mysubjectform.mark.$invalid && mysubjectform.mark.$touched">
+                            Subject name required</p>
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" ng-click="addSubject()"  data-dismiss="modal" ng-disabled="mysubjectform.$invalid"  class="btn btn-primary" >Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="classModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Add Class</h4>
+            </div>
+            <form name="myclassform" novalidate method="post" >
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label for="inputPassword" class="sr-only">class Level</label>
+                        <input class="form-control" type="text" name="name" placeholder="class level"
+                               ng-model="sclass.classlevel" ng-required="true">
+                        <p class="text-danger"
+                           ng-show="myclassform.classlevel.$invalid && myclassform.classlevel.$touched">
+                            class level required</p>
+
+                    </div>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" ng-click="addClass()"  data-dismiss="modal" ng-disabled="myclassform.$invalid"  class="btn btn-primary" >Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
