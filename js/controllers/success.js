@@ -3,18 +3,7 @@ myApp.controller('SuccessController',
     function ($scope, $http, $location, Data, $rootScope,$routeParams,toaster) {
         $scope.message = "Welcome!!!";
        
-                       $scope.updateStudentAndSubjectDropDown = function () {
-         
-                Data.getStudent().then(function (results) {
-                         $rootScope.students=results;
-                         
-                          console.log(results);
-                       
-                        
-                         
-                     });
-
-        };
+                 
         $scope.updateuserinfo = function () {
             Data.updateUserInfo().then(function (status) {
                  toaster.clear();
@@ -48,6 +37,14 @@ myApp.controller('SuccessController',
                 if (status == 'success')
                 {
                     //$location.path('/profile');
+                    Data.getStudent().then(function (results) {
+                         $rootScope.students=results;
+                         
+                          console.log(results);
+                       
+                        
+                         
+                     });
                      toaster.pop('info', "", 'successfully added', 3000, 'trustedHtml');
                 } else
                 {
@@ -63,7 +60,7 @@ myApp.controller('SuccessController',
 
 
         };
-     $scope.class = function () {
+     $scope.addClass = function () {
        
             
             Data.addClass($scope.sclass).then(function (status) {
@@ -71,7 +68,14 @@ myApp.controller('SuccessController',
                  console.log(status);
                 if (status == 'success')
                 {
-                    //$location.path('/profile');
+                    Data.getClass().then(function (results) {
+                         $rootScope.classes=results;
+                         
+                          console.log(results);
+                       
+                        
+                         
+                     });
                      toaster.pop('info', "", 'successfully added', 3000, 'trustedHtml');
                 } else
                 {
@@ -95,7 +99,15 @@ myApp.controller('SuccessController',
                  console.log(status);
                 if (status == 'success')
                 {
-                    //$location.path('/profile');
+                     Data.getSubject().then(function (results) {
+                         $rootScope.subjects=results;
+                         console.log(results);
+                         
+                          
+                       
+                        
+                         
+                     });
                      toaster.pop('info', "", 'successfully added', 3000, 'trustedHtml');
                 } else
                 {
