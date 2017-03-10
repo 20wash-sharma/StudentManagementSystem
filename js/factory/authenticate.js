@@ -122,10 +122,10 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
 
 
             },
-            'addMarks': function (studentinfo) {
+            'addMarks': function (studentinfo, subject_ids) {
                 console.log(studentinfo);
                 var qOjbect = $q.defer();
-                var userdata = {student_id: studentinfo.student, subject_id: studentinfo.subject,marks:studentinfo.mark, task: 'addMarks'};
+                var userdata = {student_id: studentinfo, subject_ids: subject_ids, task: 'addMarks'};
                 $http({
                     method: 'POST',
                     url: 'test.php',
@@ -242,6 +242,27 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
 
             }
             
+            ,'getFilteredStudent': function () {
+
+                var qOjbect = $q.defer();
+                var userdata = { task: 'getFilteredStudent'};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    //console.log(success.data[0].Sender);
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            }
                ,'filterSubjectDropDown': function (student_id) {
 
                 var qOjbect = $q.defer();

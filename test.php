@@ -49,9 +49,40 @@ else if ($data->task == 'addSubject') {
         }
     
 }
+
+else if ($data->task == 'getFilteredStudent') {
+    
+        $myArray = array();
+    if (isset($_SESSION["currentuser"])) {
+        $query1 = "select count(*) from subjects";
+    $result = $mysqli->query($query1);
+    $row_cnt = $result->fetch_row();
+        $query1 = "select count(si.info_id) as studentcount, st.student_id,st.student_name from student st  left join studentmarksinfo si  on si.student_id=st.student_id GROUP BY si.student_id having studentcount < $row_cnt[0]";
+        $result = $mysqli->query($query1);
+        $row_cnt = $result->num_rows;
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $myArray[] = $row;
+            }
+            
+        }
+        echo json_encode($myArray);
+    }//if the session is set
+  else 
+  {
+      echo 'nosession';
+  }
+    
+}
 else if ($data->task == 'addMarks') {
     
-        $sql = "insert into studentmarksinfo (student_id, subject_id, marks) values (" . $data->student_id . ",$data->subject_id ,$data->marks  )";
+        $sql = "insert into studentmarksinfo (student_id, subject_id, marks) values " ;
+        foreach ($data->subject_ids as $key => $value) {
+            if($key!='student')
+    $sql.="($data->student_id,$key,$value),";
+    
+}
+$sql=rtrim($sql, ',');
         if ($mysqli->query($sql) === TRUE) {
             echo 'success';
            

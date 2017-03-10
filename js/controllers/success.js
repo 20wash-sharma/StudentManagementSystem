@@ -3,7 +3,7 @@ myApp.controller('SuccessController',
     function ($scope, $http, $location, Data, $rootScope,$routeParams,toaster) {
         $scope.message = "Welcome!!!";
        
-                 
+                //  $scope.ssstudent = {};
         $scope.updateuserinfo = function () {
             Data.updateUserInfo().then(function (status) {
                  toaster.clear();
@@ -30,6 +30,21 @@ myApp.controller('SuccessController',
 
         };
         
+        $scope.getFilteredStudent = function () {
+            
+            Data.getFilteredStudent().then(function (results) {
+                 
+                 console.log(results);
+               $rootScope.filteredstudents=results;
+
+
+            }, function (err) {
+                //document.write(err);
+                $scope.invalidmessage = err;
+            });
+
+
+        };
         $scope.onStudentDropDownChange = function (studentid) {
             
             Data.filterSubjectDropDown(studentid).then(function (results) {
@@ -144,13 +159,11 @@ myApp.controller('SuccessController',
         };
      $scope.addMarks = function () {
        console.log($scope.ssstudent);
-       console.log($rootScope.filteredsubjects);
-       for(sub in  $rootScope.filteredsubjects)
-       {
-         console.log($rootScope.filteredsubjects[sub].subject_name);
-       }
+      
+       //console.log($scope.subjectids);
+     
             
-            /*Data.addMarks($scope.ssstudent).then(function (status) {
+            Data.addMarks($scope.ssstudent.student,$scope.ssstudent ).then(function (status) {
                  toaster.clear();
                  console.log(status);
                 if (status == 'success')
@@ -176,7 +189,7 @@ myApp.controller('SuccessController',
             }, function (err) {
                 //document.write(err);
                 $scope.invalidmessage = err;
-            });*/
+            });
 
 
         };

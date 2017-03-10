@@ -1,10 +1,11 @@
 <div class="row">
 
 
-    <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Marks</button>
+    <button ng-click="getFilteredStudent()"   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Marks</button>
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#classModal" data-whatever="@mdo">Add Class</button>
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#subjectModal" data-whatever="@mdo">Add Subject</button>
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#studentModal" data-whatever="@mdo">Add Student</button>
+<button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#monitorModal" data-whatever="@mdo">Monitor</button>
 
     <div class="col-md-8 col-md-offset-2">
         <table class="table table-striped table-bordered">
@@ -34,7 +35,7 @@
                         <div class="col-10">
                             <select class="form-control" name="student" ng-required="true" ng-model="ssstudent.student" ng-change="onStudentDropDownChange(ssstudent.student)">
                                 <option 
-                                    ng-repeat="studentv in students"
+                                    ng-repeat="studentv in filteredstudents"
                                     value="{{studentv.student_id}}">
                                     {{studentv.student_name}}
                                 </option>
@@ -52,7 +53,7 @@
                         <label for="example-text-input" class="col-2 col-form-label">{{subject.subject_name}}</label>
                         <div class="col-10">
                             <input  class="form-control" type="text" name="subjectname" placeholder="Mark"
-                                   ng-model="newObject[subject.subject_name]" ng-required="true">
+                                   ng-model="ssstudent[subject.subject_id]" ng-required="true">
                             <p class="text-danger" 
                                ng-show="innerForm.subjectname.$invalid && innerForm.subjectname.$touched">
                                 Mark required</p>
@@ -182,6 +183,41 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" ng-click="addStudent()"  data-dismiss="modal" ng-disabled="mystudentform.$invalid"  class="btn btn-primary" >Submit</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="monitorModal" tabindex="-1" role="dialog"  >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Student Info</h4>
+            </div>
+            
+            <form name="mymonitorform" novalidate method="post" >
+                <div class="modal-body">
+                    
+                   
+                    <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Students</label>
+                        <div class="col-10">
+                            <select class="form-control" name="student" ng-required="true" ng-model="monitor.student" ng-change="onMonitorStudentDropDownChange(monitor.student)">
+                                <option 
+                                    ng-repeat="studentm in students"
+                                    value="{{studentm.student_id}}">
+                                    {{studentm.student_name}}
+                                </option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                     </div>
             </form>
         </div>
     </div>
