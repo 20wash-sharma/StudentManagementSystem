@@ -4,6 +4,8 @@ myApp.controller('SuccessController',
         $scope.message = "Welcome!!!";
        
                 //  $scope.ssstudent = {};
+                $scope.subjectassigncheckbox = {};
+                
         $scope.updateuserinfo = function () {
             Data.updateUserInfo().then(function (status) {
                  toaster.clear();
@@ -45,12 +47,29 @@ myApp.controller('SuccessController',
 
 
         };
-        $scope.onStudentDropDownChange = function (studentid) {
-            
-            Data.filterSubjectDropDown(studentid).then(function (results) {
+        
+         $scope.onClassDropDownChangeAddMarks = function (classid) {
+              $rootScope.filteredAddMarksSubjects={};
+           $rootScope.retainedClassIdValueOnClassDropDownChangeAddMarks= classid;
+            Data.filterStudentAddMarksDropDown(classid).then(function (results) {
                  
                  console.log(results);
-               $rootScope.filteredsubjects=results;
+               $rootScope.filteredStudentAddMarks=results;
+           
+
+            }, function (err) {
+                //document.write(err);
+                $scope.invalidmessage = err;
+            });
+
+
+        };
+          $scope.onStudentMonitorDropDownChange = function (studentid ) {
+            
+            Data.getSubjecMarksWithitsAverage(studentid, $rootScope.retainedClassIdValueOnClassDropDownChangeAddMarks).then(function (results) {
+                 
+                 console.log(results);
+               $rootScope.subjecMarksWithitsAverage=results;
 
 
             }, function (err) {
@@ -60,6 +79,92 @@ myApp.controller('SuccessController',
 
 
         };
+        $scope.onStudentAddMarksDropDownChange = function (studentid ) {
+            
+            Data.filterSubjectsAddMarks(studentid, $rootScope.retainedClassIdValueOnClassDropDownChangeAddMarks).then(function (results) {
+                 
+                 console.log(results);
+               $rootScope.filteredAddMarksSubjects=results;
+
+
+            }, function (err) {
+                //document.write(err);
+                $scope.invalidmessage = err;
+            });
+
+
+        };
+        $scope.assignStudent= function (){
+                Data.assignStudent($scope.studentassign.class,$scope.studentassign.student ).
+                        then(function (status) {
+                 toaster.clear();
+                 console.log(status);
+                if (status == 'success')
+                {
+                     $scope.subjectassign={};
+                      $scope.subjectassigncheckbox={};
+                    
+                     toaster.pop('info', "", 'successfully assigned', 3000, 'trustedHtml');
+                } else
+                {
+                    $scope.invalidmessage = 'add failed';
+                     toaster.pop('warning', "", 'assigned failed', 3000, 'trustedHtml');
+                }
+
+
+            }, function (err) {
+                //document.write(err);
+                $scope.invalidmessage = err;
+            });
+        }
+        $scope.assignSubject= function (){
+              console.log($scope.subjectassign);
+           
+            console.log($scope.subjectassign.class);
+            console.log($scope.subjectassigncheckbox );
+                Data.assignSubject($scope.subjectassign.class,$scope.subjectassigncheckbox ).
+                        then(function (status) {
+                 toaster.clear();
+                 console.log(status);
+                if (status == 'success')
+                {
+                     $scope.subjectassign={};
+                      $scope.subjectassigncheckbox={};
+                    
+                     toaster.pop('info', "", 'successfully assigned', 3000, 'trustedHtml');
+                } else
+                {
+                    $scope.invalidmessage = 'add failed';
+                     toaster.pop('warning', "", 'assigned failed', 3000, 'trustedHtml');
+                }
+
+
+            }, function (err) {
+                //document.write(err);
+                $scope.invalidmessage = err;
+            });
+
+        }
+        $scope.onSubjectAssignmentCheckBoxSelected= function (){
+            $scope. anysubjectSelected= false;
+          
+           console.log($scope.subjectassign);
+           
+             for(var key in $scope.subjectassigncheckbox){
+               
+            console.log('Key -' +key +' val- '+$scope.subjectassigncheckbox[key]);
+          for(var key in $scope.subjectassigncheckbox){
+            console.log('Key -' +key +' val- '+$scope.subjectassigncheckbox[key]);
+            if($scope.subjectassigncheckbox[key]){
+                $scope.anysubjectSelected=true;
+            }
+        }
+                
+           
+        }
+        console.log($scope. anysubjectSelected);
+            
+        }
          $scope.addStudent = function () {
             
             Data.addStudentInfo($scope.sstudent).then(function (status) {
@@ -163,13 +268,13 @@ myApp.controller('SuccessController',
        //console.log($scope.subjectids);
      
             
-            Data.addMarks($scope.ssstudent.student,$scope.ssstudent ).then(function (status) {
+            Data.addMarks($scope.ssstudent.class,$scope.ssstudent.student,$scope.ssstudent ).then(function (status) {
                  toaster.clear();
                  console.log(status);
                 if (status == 'success')
                 {
                      $scope.ssstudent={};
-                     Data.getStudentMarksInfo().then(function (results) {
+                    Data.getStudentMarksInfo().then(function (results) {
                          $rootScope.studentMarkInfo=results;
                          console.log(results);
                          

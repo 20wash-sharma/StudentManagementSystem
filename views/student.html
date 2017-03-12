@@ -1,23 +1,71 @@
+
+
 <div class="row">
-
-
-    <button ng-click="getFilteredStudent()"   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Marks</button>
+    <div class="col-md-8 col-md-offset-2">
+        <button ng-click="getFilteredStudent()"   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add Marks</button>
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#classModal" data-whatever="@mdo">Add Class</button>
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#subjectModal" data-whatever="@mdo">Add Subject</button>
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#studentModal" data-whatever="@mdo">Add Student</button>
+<button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#AssignClass" data-whatever="@mdo">Assign a Class</button>
+<button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#Assignsubject" data-whatever="@mdo">Assign Subjects</button>
+
 <button   data-dismiss="modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#monitorModal" data-whatever="@mdo">Monitor</button>
 
-    <div class="col-md-8 col-md-offset-2">
+    </div> 
+</div>
+<hr>
+<div class="row">
+
+
+    
+    <div class="col-md-2 ">
         <table class="table table-striped table-bordered">
-            <tr><th rowspan="2">Student Name</th><th rowspan="2">Class Level</th><th  colspan="{{subjectslength}}">Subjects</th></tr>
-            <tr><th ng-repeat="subject in subjects">{{subject.subject_name}}</th></tr>
-            <tr ng-repeat="student in students"><th>{{student.student_name}}</th><th>{{student.class_level}}</th><th ng-repeat="subject in subjects" ><span ng-init="stmarks=info.student_name==student.student_name && subject.subject_name==info.subject_name?info.marks:null" ng-repeat="info in studentMarkInfo">{{stmarks}}</span></th></tr>
+            <thead> <tr><th>ID</th><th>Student Name</th></tr></thead>
+            <tbody>
+                
+            
            
+            <tr ng-repeat="student in students"><th>{{student.student_id}}</th><th>{{student.student_name}}</th><tr>
+            </tbody>
         </table>
 
        
 
     </div>
+ <div class="col-md-2">
+        <table class="table table-striped table-bordered">
+           <thead> <tr><th>ID</th><th>Class Level</th></tr></thead>
+           <tbody>
+            <tr ng-repeat="class in classes"><th>{{class.class_id}}</th><th>{{class.class_level}}</th><tr>
+        </tbody>
+        </table>
+
+       
+
+    </div>
+<div class="col-md-2">
+        <table class="table table-striped table-bordered">
+           <thead> <tr><th>ID</th><th>Subject Name</th></tr></thead>
+           <tbody>
+            <tr ng-repeat="subject in subjects"><th>{{subject.subject_id}}</th><th>{{subject.subject_name}}</th><tr>
+        </tbody>
+        </table>
+
+       
+
+    </div>
+    <div class="col-md-2">
+        <table class="table table-striped table-bordered">
+           <thead> <tr><th>Student Name</th><th>Class Level</th><th>Average Marks</th></tr></thead>
+           <tbody>
+            <tr ng-repeat="marksinfo in studentMarkInfo"><th>{{marksinfo.student_name}}</th><th>{{marksinfo.class_level}}</th><th>{{marksinfo.AverageMarks}}</th><tr>
+        </tbody>
+        </table>
+
+       
+
+    </div>
+    
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
@@ -29,13 +77,28 @@
             </div>
             <form name="mymarksform" novalidate method="post" >
                 <div class="modal-body">
-                 
+                  <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Class</label>
+                        <div class="col-10">
+                              <select class="form-control" ng-model="ssstudent.class" ng-required="true" name="class" ng-change="onClassDropDownChangeAddMarks(ssstudent.class)">
+                    <option 
+                        ng-repeat="class in classes"
+                        value="{{class.class_id}}">
+                        {{class.class_level}}
+                    </option>
+                </select>
+                            <p class="text-danger"
+                   ng-show="mymarksform.class.$invalid && mystudentform.class.$touched">
+                    Class required</p>
+                            
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="example-text-input" class="col-2 col-form-label">Students</label>
                         <div class="col-10">
-                            <select class="form-control" name="student" ng-required="true" ng-model="ssstudent.student" ng-change="onStudentDropDownChange(ssstudent.student)">
+                            <select class="form-control" name="student" ng-required="true" ng-model="ssstudent.student" ng-change="onStudentAddMarksDropDownChange(ssstudent.student)">
                                 <option 
-                                    ng-repeat="studentv in filteredstudents"
+                                    ng-repeat="studentv in filteredStudentAddMarks"
                                     value="{{studentv.student_id}}">
                                     {{studentv.student_name}}
                                 </option>
@@ -48,7 +111,7 @@
                     
                   
               
-                    <div class="form-group" ng-repeat="subject in filteredsubjects">
+                    <div class="form-group" ng-repeat="subject in filteredAddMarksSubjects">
                           <ng-form name="innerForm">
                         <label for="example-text-input" class="col-2 col-form-label">{{subject.subject_name}}</label>
                         <div class="col-10">
@@ -161,27 +224,124 @@
                     Name required</p>
                         </div>
                     </div>
-                     <div class="form-group">
-                        <label for="example-text-input" class="col-2 col-form-label">Class</label>
-                        <div class="col-10">
-                              <select class="form-control" ng-model="sstudent.class" ng-required="true" name="class">
-                    <option 
-                        ng-repeat="class in classes"
-                        value="{{class.class_id}}">
-                        {{class.class_level}}
-                    </option>
-                </select>
-                            <p class="text-danger"
-                   ng-show="mystudentform.class.$invalid && mystudentform.class.$touched">
-                    Class required</p>
-                            
-                        </div>
-                    </div>
+                    
                 </div>
                 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" ng-click="addStudent()"  data-dismiss="modal" ng-disabled="mystudentform.$invalid"  class="btn btn-primary" >Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Assignsubject" tabindex="-1" role="dialog"  >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Assign Subjects to a class</h4>
+            </div>
+            
+            <form name="subjectassignform" novalidate method="post" >
+                <div class="modal-body">
+                    
+                   
+                     <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Class</label>
+                    <div class="col-10">
+                        <select class="form-control" ng-model="subjectassign.class" ng-required="true" name="class">
+                            <option 
+                                ng-repeat="class in classes"
+                                value="{{class.class_id}}">
+                                {{class.class_level}}
+                            </option>
+                        </select>
+                        <p class="text-danger"
+                           ng-show="subjectassignform.class.$invalid && subjectassignform.class.$touched">
+                            Class required</p>
+
+                    </div>
+                    </div>
+                       <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Subjects</label>
+                    <div class="col-10">
+                        
+
+                   
+                            <span ng-repeat="subject in subjects">
+                                <input type="checkbox"
+                                       name="subject"
+                                       ng-change="onSubjectAssignmentCheckBoxSelected()"
+                                       ng-model="subjectassigncheckbox[subject.subject_id]"
+                                       value="{{subject.subject_id}}"/>
+                                {{subject.subject_name}}
+                            </span>
+                            <p class="text-danger" ng-if="!anysubjectSelected">At least one is Required</p>
+                    
+                      
+                    </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 <button type="button" ng-click="assignSubject()"  data-dismiss="modal" ng-disabled="subjectassignform.$invalid || !anysubjectSelected"  class="btn btn-primary" >Submit</button>
+              
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AssignClass" tabindex="-1" role="dialog"  >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Assign student a Class</h4>
+            </div>
+            
+            <form name="studentassignform" novalidate method="post" >
+                <div class="modal-body">
+                    
+                   
+                    <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Students</label>
+                        <div class="col-10">
+                            <select class="form-control" name="student" ng-required="true" ng-model="studentassign.student" ng-change="onStudentAssignDropDownChange(monitor.student)">
+                                <option 
+                                    ng-repeat="studentm in students"
+                                    value="{{studentm.student_id}}">
+                                    {{studentm.student_name}}
+                                </option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Class</label>
+                    <div class="col-10">
+                        <select class="form-control" ng-model="studentassign.class" ng-required="true" name="class">
+                            <option 
+                                ng-repeat="class in classes"
+                                value="{{class.class_id}}">
+                                {{class.class_level}}
+                            </option>
+                        </select>
+                        <p class="text-danger"
+                           ng-show="studentassignform.class.$invalid && studentassignform.class.$touched">
+                            Class required</p>
+
+                    </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 <button type="button" ng-click="assignStudent()"  data-dismiss="modal" ng-disabled="studentassignform.$invalid"  class="btn btn-primary" >Submit</button>
+              
                 </div>
             </form>
         </div>
@@ -195,26 +355,70 @@
                 <h4 class="modal-title" id="exampleModalLabel">Student Info</h4>
             </div>
             
+            
             <form name="mymonitorform" novalidate method="post" >
                 <div class="modal-body">
-                    
-                   
-                    <div class="form-group">
-                        <label for="example-text-input" class="col-2 col-form-label">Students</label>
+                  <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Class</label>
                         <div class="col-10">
-                            <select class="form-control" name="student" ng-required="true" ng-model="monitor.student" ng-change="onMonitorStudentDropDownChange(monitor.student)">
-                                <option 
-                                    ng-repeat="studentm in students"
-                                    value="{{studentm.student_id}}">
-                                    {{studentm.student_name}}
-                                </option>
-                            </select>
+                              <select class="form-control" ng-model="mymonitor.class" ng-required="true" name="class" ng-change="onClassDropDownChangeAddMarks(mymonitor.class)">
+                    <option 
+                        ng-repeat="class in classes"
+                        value="{{class.class_id}}">
+                        {{class.class_level}}
+                    </option>
+                </select>
+                            <p class="text-danger"
+                   ng-show="mymonitorform.class.$invalid && mymonitorform.class.$touched">
+                    Class required</p>
                             
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="example-text-input" class="col-2 col-form-label">Students</label>
+                        <div class="col-10">
+                            <select class="form-control" name="student" ng-required="true" ng-model="mymonitor.student" ng-change="onStudentMonitorDropDownChange(mymonitor.student)">
+                                <option 
+                                    ng-repeat="studentv in filteredStudentAddMarks"
+                                    value="{{studentv.student_id}}">
+                                    {{studentv.student_name}}
+                                </option>
+                            </select>
+                             <p class="text-danger"
+                               ng-show="mymonitorform.student.$invalid && mymonitorform.student.$touched">
+                                Student required</p>
+                        </div>
+                    </div>
                     
+                  
+              
+                    <div class="form-group">
+                        <dl class="dl-horizontal">
+                            <dt>Class Level</dt>
+                            <dd>{{subjecMarksWithitsAverage[0].class_level}}</dd>
+                            <dt>Name</dt>
+                            <dd>{{subjecMarksWithitsAverage[0].student_name}}</dd>
+                            <dt>Average</dt>
+                            <dd>{{subjecMarksWithitsAverage[0].AverageMarks}}</dd>
+                        </dl>
+                          <table class="table table-striped table-bordered">
+                              <thead> <tr><th>Subject</th><th>Marks</th></tr></thead>
+           <tbody>
+                 
+               <tr ng-if="key!=0" ng-repeat="(key, value) in subjecMarksWithitsAverage">
+                <td >{{value.subject_name}}</td><td>{{value.marks}}</td>
+              
+            <tr>
+        </tbody>
+                            </table>
+                    </div>
+                   
+                   
+
+
+
+
                 </div>
-                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                      </div>
@@ -222,3 +426,5 @@
         </div>
     </div>
 </div>
+
+

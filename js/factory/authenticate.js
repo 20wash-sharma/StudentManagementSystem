@@ -45,7 +45,7 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
             'addStudentInfo': function (student) {
 
                 var qOjbect = $q.defer();
-                var userdata = {name: student.name, class_id: student.class, task: 'addStudent'};
+                var userdata = {name: student.name,  task: 'addStudent'};
                 $http({
                     method: 'POST',
                     url: 'test.php',
@@ -122,10 +122,51 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
 
 
             },
-            'addMarks': function (studentinfo, subject_ids) {
-                console.log(studentinfo);
+            
+             'assignStudent': function (classid, student_id) {
+                
                 var qOjbect = $q.defer();
-                var userdata = {student_id: studentinfo, subject_ids: subject_ids, task: 'addMarks'};
+                var userdata = {class_id: classid, student_id: student_id, task: 'assignStudent'};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            },
+             'assignSubject': function (classid, subject_ids) {
+                
+                var qOjbect = $q.defer();
+                var userdata = {class_id: classid, subject_ids: subject_ids, task: 'assignSubject'};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            },
+            'addMarks': function (class_id ,studentinfo, subject_ids) {
+                console.log(subject_ids);
+                var qOjbect = $q.defer();
+                var userdata = {class_id:class_id,student_id: studentinfo, subject_ids: subject_ids, task: 'addMarks'};
                 $http({
                     method: 'POST',
                     url: 'test.php',
@@ -263,10 +304,54 @@ myApp.factory("Data", ['$http', '$q','$rootScope',
 
 
             }
-               ,'filterSubjectDropDown': function (student_id) {
+            
+              ,'filterStudentAddMarksDropDown': function (class_id) {
+                    
+                var qOjbect = $q.defer();
+                var userdata = { task: 'filterStudentAddMarksDropDown' , class_id:class_id};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    //console.log(success.data[0].Sender);
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            }
+            
+               ,'getSubjecMarksWithitsAverage': function (student_id, class_id) {
 
                 var qOjbect = $q.defer();
-                var userdata = { task: 'getFilteredSubject' , student_id:student_id};
+                var userdata = { task: 'getSubjecMarksWithitsAverage',class_id:class_id, student_id:student_id};
+                $http({
+                    method: 'POST',
+                    url: 'test.php',
+                    data: userdata,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                }).then(function (success) {
+                    //console.log(success.data[0].Sender);
+                    qOjbect.resolve(success.data);
+                   
+
+                }, function (err) {
+                    console.log(err);
+                });
+                return qOjbect.promise;
+
+
+            }
+               ,'filterSubjectsAddMarks': function (student_id, class_id) {
+
+                var qOjbect = $q.defer();
+                var userdata = { task: 'filterSubjectsAddMarks',class_id:class_id, student_id:student_id};
                 $http({
                     method: 'POST',
                     url: 'test.php',

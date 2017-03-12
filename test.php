@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-$mysqli = new mysqli('localhost', 'root', '', 'studentmarlabs');
+$mysqli = new mysqli('localhost', 'root', '', 'studentmanagementsystem');
 /* $myArray = array();
   if ($result = $mysqli->query("SELECT * FROM users")) {
 
@@ -57,7 +57,7 @@ else if ($data->task == 'getFilteredStudent') {
         $query1 = "select count(*) from subjects";
     $result = $mysqli->query($query1);
     $row_cnt = $result->fetch_row();
-        $query1 = "select count(si.info_id) as studentcount, st.student_id,st.student_name from student st  left join studentmarksinfo si  on si.student_id=st.student_id GROUP BY si.student_id having studentcount < $row_cnt[0]";
+        $query1 = "select *  from student";
         $result = $mysqli->query($query1);
         $row_cnt = $result->num_rows;
         if ($row_cnt > 0) {
@@ -74,12 +74,42 @@ else if ($data->task == 'getFilteredStudent') {
   }
     
 }
+
+else if ($data->task == 'assignStudent') {
+    
+        $sql = "insert into studentclass (class_id, student_id) values " ;
+       $sql.="($data->class_id,$data->student_id)";
+        if ($mysqli->query($sql) === TRUE) {
+            echo 'success';
+           
+        } else {
+            echo "Error: " . $sql . "<br>" . $mysqli->error;
+        }
+    
+}
+else if ($data->task == 'assignSubject') {
+    
+        $sql = "insert into subjectclass (class_id, subject_id) values " ;
+        foreach ($data->subject_ids as $key => $value) {
+           
+    $sql.="($data->class_id,$key),";
+    
+}
+$sql=rtrim($sql, ',');
+        if ($mysqli->query($sql) === TRUE) {
+            echo 'success';
+           
+        } else {
+            echo "Error: " . $sql . "<br>" . $mysqli->error;
+        }
+    
+}
 else if ($data->task == 'addMarks') {
     
-        $sql = "insert into studentmarksinfo (student_id, subject_id, marks) values " ;
+        $sql = "insert into studentmarksinfo (student_id,class_id, subject_id, marks) values " ;
         foreach ($data->subject_ids as $key => $value) {
-            if($key!='student')
-    $sql.="($data->student_id,$key,$value),";
+            if(!($key=='student' || $key=='class'))
+    $sql.="($data->student_id,$data->class_id,$key,$value),";
     
 }
 $sql=rtrim($sql, ',');
@@ -93,7 +123,7 @@ $sql=rtrim($sql, ',');
 }
 else if ($data->task == 'addStudent') {
     
-        $sql = "insert into student (student_name, class_id) values ('" . $data->name . "',   $data->class_id )";
+        $sql = "insert into student (student_name) values ('" . $data->name . "')";
         if ($mysqli->query($sql) === TRUE) {
             echo 'success';
            
@@ -184,7 +214,7 @@ else if ($data->task == 'updateuser') {
 else if ($data->task == 'getStudentMarksInfo') {
     $myArray = array();
     if (isset($_SESSION["currentuser"])) {
-        $query1 = "select smi.*,st.student_name, c.class_level,su.subject_name from studentmarksinfo smi join subjects su on su.subject_id= smi.subject_id join student st on st.student_id= smi.student_id join class c on c.class_id = st.class_id order by st.student_name asc
+        $query1 = "SELECT ROUND(AVG(marks), 2) as AverageMarks, st.student_name, c.class_level FROM `studentmarksinfo` smi join student st on st.student_id = smi.student_id JOIN subjects sub on sub.subject_id= smi.subject_id join class c on c.class_id= smi.class_id GROUP BY c.class_level  , st.student_name
 ";
         $result = $mysqli->query($query1);
         $row_cnt = $result->num_rows;
@@ -223,10 +253,62 @@ else if ($data->task == 'getClass') {
 
 }//if get session data is requested
 
-else if ($data->task == 'getFilteredSubject') {
+else if ($data->task == 'filterStudentAddMarksDropDown') {
     $myArray = array();
     if (isset($_SESSION["currentuser"])) {
-        $query1 = "SELECT * FROM `subjects` WHERE subject_id not in (SELECT DISTINCT s.subject_id from subjects s join studentmarksinfo si on s.subject_id= si.subject_id where si.student_id = $data->student_id ) ";
+        $query1 = "select s.student_id, s.student_name from studentclass sc join student s on s.student_id = sc.student_id where class_id = $data->class_id  ";
+       
+        $result = $mysqli->query($query1);
+        $row_cnt = $result->num_rows;
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $myArray[] = $row;
+            }
+            
+        }
+        echo json_encode($myArray);
+    }//if the session is set
+  else 
+  {
+      echo 'nosession';
+  }
+
+}//if get session data is requested
+else if ($data->task == 'getSubjecMarksWithitsAverage') {
+    $myArray = array();
+    if (isset($_SESSION["currentuser"])) {
+         $query1 = "select   c.class_level, st.student_name ,ROUND(AVG(si.marks), 2) as AverageMarks  from studentmarksinfo si join subjects sub on sub.subject_id= si.subject_id join class c on c.class_id = si.class_id join student st on st.student_id= si.student_id where si.class_id= $data->class_id and si.student_id= $data->student_id group by st.student_name";
+        $result = $mysqli->query($query1);
+        $row_cnt = $result->num_rows;
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $myArray[] = $row;
+            }
+            
+        }
+        $query1 = "select si.marks , sub.subject_name  from studentmarksinfo si join subjects sub on sub.subject_id= si.subject_id join class c on c.class_id = si.class_id join student st on st.student_id= si.student_id where si.class_id= $data->class_id and si.student_id= $data->student_id";
+        $result = $mysqli->query($query1);
+        $row_cnt = $result->num_rows;
+        if ($row_cnt > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $myArray[] = $row;
+            }
+            
+        }
+       
+        
+        echo json_encode($myArray);
+    }//if the session is set
+  else 
+  {
+      echo 'nosession';
+  }
+
+}//if get session data is requested
+else if ($data->task == 'filterSubjectsAddMarks') {
+    $myArray = array();
+    if (isset($_SESSION["currentuser"])) {
+        $query1 = "select sub.*, st.*, c.* from subjects sub join subjectclass sc on sc.subject_id= sub.subject_id JOIN class c on c.class_id= sc.class_id join studentclass stc on stc.class_id= c.class_id join student st on st.student_id= stc.student_id where c.class_id = $data->class_id and st.student_id = $data->student_id";
         $result = $mysqli->query($query1);
         $row_cnt = $result->num_rows;
         if ($row_cnt > 0) {
@@ -266,7 +348,7 @@ else if ($data->task == 'getSubject') {
 else if ($data->task == 'getStudent') {
     $myArray = array();
     if (isset($_SESSION["currentuser"])) {
-        $query1 = "select st.*,c.class_level from student st join class c on st.class_id= c.class_id";
+        $query1 = "select * from student ";
         $result = $mysqli->query($query1);
         $row_cnt = $result->num_rows;
         if ($row_cnt > 0) {
